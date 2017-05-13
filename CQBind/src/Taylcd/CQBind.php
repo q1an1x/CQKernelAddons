@@ -11,7 +11,7 @@ use Taylcd\CQKernel\plugin\CQKPlugin;
 
 class CQBind extends CQKPlugin
 {
-    public $api = 1.3;
+    public $api = 2.3;
 
     private $codes = [];
 

@@ -8,7 +8,7 @@ use Taylcd\CQKernel\plugin\CQKPlugin;
 
 class CQEconomyTools extends CQKPlugin
 {
-    public $api = 1.3;
+    public $api = 2.3;
 
     public function onLoad()
     {

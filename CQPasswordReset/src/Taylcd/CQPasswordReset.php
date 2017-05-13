@@ -7,7 +7,7 @@ use Taylcd\CQKernel\plugin\CQKPlugin;
 
 class CQPasswordReset extends CQKPlugin
 {
-    public $api = 1.3;
+    public $api = 2.3;
 
     private $plugin = null;
 
