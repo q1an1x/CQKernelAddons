@@ -1,0 +1,10 @@
+# CQEconomyTools for CQKernel
+# Website: https://cqkernel.net/
+
+# 经济查询指令 (CQ端)
+# 用户可以使用该指令在QQ中查询自己或他人的经济信息
+inquire-command: 经济查询
+
+# 转账指令 (CQ端)
+# 用户可以使用该指令在QQ中给其他玩家转账
+transfer-command: 转账

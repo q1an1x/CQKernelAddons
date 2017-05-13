@@ -1,0 +1,14 @@
+name: CQEconomyTools
+author: Taylcd
+
+version: 1.0.0
+api:
+- 1.0.0
+- 2.0.0
+- 2.1.0
+- 3.0.0
+- 4.0.0
+
+main: Taylcd\CQEconomyTools
+
+softdepend: ["CQKernel"]

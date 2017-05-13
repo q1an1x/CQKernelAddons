@@ -1,0 +1,13 @@
+name: CQPasswordReset
+author: Taylcd
+
+version: 1.0.2
+api:
+- 1.0.0
+- 2.0.0
+- 2.1.0
+- 3.0.0
+
+main: Taylcd\CQPasswordReset
+
+softdepend: ["CQKernel"]

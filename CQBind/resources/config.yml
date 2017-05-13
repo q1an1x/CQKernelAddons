@@ -1,0 +1,16 @@
+# CQBind QQ绑定 for CQKernel
+
+# 是否允许玩家绑定QQ账号
+enable-bind: true
+
+# 是否允许玩家解绑QQ账号
+enable-unbind: true
+
+# 绑定指令 (QQ中发送)
+bind-command: 绑定账号
+
+# 解绑指令 (QQ中发送)
+unbind-command: 解绑账号
+
+# 随机码获取指令 (游戏中发送)
+random-code-command: 随机码

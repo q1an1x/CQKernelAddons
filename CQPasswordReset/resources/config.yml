@@ -1,0 +1,8 @@
+# CQPasswordReset for CQKernel
+# Website: https://cqkernel.net/
+
+# 密码最少字符个数
+min-password-length: 4
+
+# 密码最多字符个数
+max-password-length: 20
