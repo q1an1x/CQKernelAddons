@@ -22,12 +22,10 @@ class CQPasswordReset extends CQKPlugin
             {
                 $this->plugin = $plugin;
                 $this->getLogger()->info('检测到 ' . $plugin . ' 插件，密码重置功能启用.');
+                return;
             }
         }
-        if($this->plugin == null)
-        {
-            $this->getLogger()->warning('未检测到任何兼容的登录插件，用户将无法进行密码重置!');
-        }
+        $this->getLogger()->warning('未检测到任何兼容的登录插件，用户将无法进行密码重置!');
     }
 
     public function onEnable()
