@@ -1,0 +1,4 @@
+# CQCommandExecutor
+
+# 执行 PocketMine 指令的指令(CQ)
+execute-command: "执行指令"
