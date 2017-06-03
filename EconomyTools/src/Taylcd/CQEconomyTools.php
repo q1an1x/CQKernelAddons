@@ -73,12 +73,12 @@ class CQEconomyTools extends CQKPlugin
                 }
                 unset($CQBind);
             } else $name = $args[0];
-            if(($money = $EconomyAPI->myMoney($name)) == EconomyAPI::RET_NO_ACCOUNT)
+            if(($money = $EconomyAPI->myMoney($name)) < 1)
             {
                 $this->sendMessage($name . ' 未注册经济账户，查询失败!', $fromQQ, $fromGroup);
                 return;
             }
-            $this->sendMessage($name . '当前拥有 ' . $EconomyAPI->getMonetaryUnit() . $money . ' 余额。', $fromQQ, $fromGroup);
+            $this->sendMessage($name . ' 当前拥有 ' . $EconomyAPI->getMonetaryUnit() . $money . ' 余额。', $fromQQ, $fromGroup);
             return;
         }
         /** @var CQBind $CQBind */
