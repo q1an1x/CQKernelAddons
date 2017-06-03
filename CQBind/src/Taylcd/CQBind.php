@@ -70,7 +70,7 @@ class CQBind extends CQKPlugin
             }
             if(!isset($args[1]))
             {
-                $this->sendMessage('你输入了错误的指令!' . CQLib::RETURN . "用法: 绑定账号 <游戏名称> <随机码>\n请先在游戏中使用指令 /" . $this->getConfig()->get('random-code-command', '随机码') . ' 获取随机码再进行绑定', $fromQQ, $fromGroup);
+                $this->sendMessage('你输入了错误的指令!' . CQLib::RETURN_KEY . "用法: 绑定账号 <游戏名称> <随机码>\n请先在游戏中使用指令 /" . $this->getConfig()->get('random-code-command', '随机码') . ' 获取随机码再进行绑定', $fromQQ, $fromGroup);
                 return;
             }
             $name = strtolower($args[0]);
