@@ -9,23 +9,41 @@ class CQCommandExecutor extends CQKPlugin
 {
     public $api = 2.3;
 
+    private $alias = [];
+
     public function onLoad()
     {
         $this->saveDefaultConfig();
         $this->reloadConfig();
+
+        $this->alias = $this->getConfig()->get('alias');
     }
 
     public function onEnable()
     {
         $this->registerCommand($this->getConfig()->get('execute-command', '执行指令'));
+        foreach($this->alias as $name => $info) $this->registerCommand($name);
     }
 
-    public function commandProgress(array $args, $fromQQ, $fromGroup = '')
+    public function commandProgress($command, array $args, $fromQQ, $fromGroup = '')
     {
-        if(!$this->getKernel()->isCQAdmin($fromQQ))
+        if(isset($this->alias[$command]))
         {
-            $this->sendMessage('您不是机器人的管理员, 无法执行指令!#{C}#' . $fromQQ . '#{C}#' . $fromGroup);
+            if(isset($this->alias[$command]['permission']) and $this->alias[$command]['permission'] === false and !$this->getKernel()->isCQAdmin($fromQQ))
+            {
+                $this->sendMessage('该指令仅管理员可用!#{C}#' . $fromQQ . '#{C}#' . $fromGroup);
+                return;
+            }
+            array_unshift($args, $this->alias[$command]['command']);
+            $this->commandProgress($this->getConfig()->get('execute-command', '执行指令'), $args, $fromQQ, $fromGroup);
             return;
+        } else
+        {
+            if(!$this->getKernel()->isCQAdmin($fromQQ))
+            {
+                $this->sendMessage('您不是机器人的管理员, 无法执行指令!#{C}#' . $fromQQ . '#{C}#' . $fromGroup);
+                return;
+            }
         }
         $commandLine = '';
         foreach($args as $arg)
@@ -52,11 +70,11 @@ class CQCommandExecutor extends CQKPlugin
 
     public function commandFromGroup($command, array $args, $fromQQ, $fromGroup)
     {
-        $this->commandProgress($args, $fromQQ, $fromGroup);
+        $this->commandProgress($command, $args, $fromQQ, $fromGroup);
     }
 
     public function commandFromPrivate($command, array $args, $fromQQ)
     {
-        $this->commandProgress($args, $fromQQ);
+        $this->commandProgress($command, $args, $fromQQ);
     }
 }
