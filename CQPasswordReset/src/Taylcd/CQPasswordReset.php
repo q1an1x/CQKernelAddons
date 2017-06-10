@@ -2,12 +2,13 @@
 
 namespace Taylcd;
 
+use Taylcd\CQKernel\CQHandler;
 use Taylcd\CQKernel\CQLib;
 use Taylcd\CQKernel\plugin\CQKPlugin;
 
 class CQPasswordReset extends CQKPlugin
 {
-    public $api = 2.3;
+    public $api = 3.1;
 
     private $plugin = null;
 
@@ -35,24 +36,24 @@ class CQPasswordReset extends CQKPlugin
 
     public function commandFromGroup($command, array $args, $fromQQ, $fromGroup)
     {
-        $this->getKernel()->sendGroupMessage($fromGroup, CQLib::At($fromQQ) . '请使用私聊进行密码重置!');
+        CQHandler::sendGroupMessage($fromGroup, CQLib::At($fromQQ) . '请使用私聊进行密码重置!');
     }
 
     public function commandFromPrivate($command, array $args, $fromQQ)
     {
         if(!isset($args[0]))
         {
-            $this->getKernel()->sendPrivateMessage($fromQQ,"你输入了错误的指令!\n用法: 重置密码 <新密码>");
+            CQHandler::sendPrivateMessage($fromQQ,"你输入了错误的指令!\n用法: 重置密码 <新密码>");
             return;
         }
         if(strlen($args[0]) < $this->getConfig()->get('min-password-length', 4))
         {
-            $this->getKernel()->sendPrivateMessage($fromQQ,'密码重置失败! 密码最少应当多于 ' . $this->getConfig()->get('min-password-length', 4) . ' 个字符.');
+            CQHandler::sendPrivateMessage($fromQQ,'密码重置失败! 密码最少应当多于 ' . $this->getConfig()->get('min-password-length', 4) . ' 个字符.');
             return;
         }
         if(strlen($args[0]) > $this->getConfig()->get('max-password-length', 20))
         {
-            $this->getKernel()->sendPrivateMessage($fromQQ,'密码重置失败! 密码最多应当少于 ' . $this->getConfig()->get('max-password-length', 20) . ' 个字符.');
+            CQHandler::sendPrivateMessage($fromQQ,'密码重置失败! 密码最多应当少于 ' . $this->getConfig()->get('max-password-length', 20) . ' 个字符.');
             return;
         }
         /** @var CQBind $CQBind */
@@ -60,16 +61,16 @@ class CQPasswordReset extends CQKPlugin
         if($CQBind === null)
         {
             $this->getLogger()->warning('无法获取 CQBind 插件，密码重置失败');
-            $this->getKernel()->sendPrivateMessage($fromQQ,'无法获取 CQBind 插件，密码重置失败');
+            CQHandler::sendPrivateMessage($fromQQ,'无法获取 CQBind 插件，密码重置失败');
             return;
         }
         if(!$name = $CQBind->getNameByQQ($fromQQ))
         {
-            $this->getKernel()->sendPrivateMessage($fromQQ,'你的 QQ 还未绑定任何游戏账号!');
+            CQHandler::sendPrivateMessage($fromQQ,'你的 QQ 还未绑定任何游戏账号!');
             return;
         }
         $this->getCQLogger()->info($fromQQ . ' 已为绑定游戏账号 ' . $name . ' 进行密码重置');
-        $this->getKernel()->sendPrivateMessage($fromQQ, $this->setPassword($name, $args[0]));
+        CQHandler::sendPrivateMessage($fromQQ, $this->setPassword($name, $args[0]));
     }
 
     public function setPassword($name, $password)

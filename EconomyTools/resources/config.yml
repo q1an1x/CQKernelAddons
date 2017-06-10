@@ -8,3 +8,6 @@ inquire-command: 经济查询
 # 转账指令 (CQ端)
 # 用户可以使用该指令在QQ中给其他玩家转账
 transfer-command: 转账
+
+# 允许非管理员用户查询他人经济信息
+allow-check-others-economy: true

@@ -3,12 +3,13 @@
 namespace Taylcd;
 
 use onebone\economyapi\EconomyAPI;
+use Taylcd\CQKernel\CQHandler;
 use Taylcd\CQKernel\CQLib;
 use Taylcd\CQKernel\plugin\CQKPlugin;
 
 class CQEconomyTools extends CQKPlugin
 {
-    public $api = 2.3;
+    public $api = 3.1;
 
     public function onLoad()
     {
@@ -38,10 +39,10 @@ class CQEconomyTools extends CQKPlugin
     {
         if($fromGroup === null)
         {
-            $this->getKernel()->sendPrivateMessage($fromQQ, $message);
+            CQHandler::sendPrivateMessage($fromQQ, $message);
             return;
         }
-        $this->getKernel()->sendGroupMessage($fromGroup, CQLib::At($fromQQ) . $message);
+        CQHandler::sendGroupMessage($fromGroup, CQLib::At($fromQQ) . $message);
     }
 
     public function commandProgress($command, array $args, $fromQQ, $fromGroup = null)
@@ -72,7 +73,15 @@ class CQEconomyTools extends CQKPlugin
                     return;
                 }
                 unset($CQBind);
-            } else $name = $args[0];
+            } else {
+
+                if(!$this->getConfig()->get('allow-check-others-economy', true))
+                {
+                    $this->sendMessage("你不是管理员，无法查询他人的经济信息。\n" . '请进行账号绑定后进行经济查询!', $fromQQ, $fromGroup);
+                    return;
+                }
+                $name = $args[0];
+            }
             if(($money = $EconomyAPI->myMoney($name)) < 1)
             {
                 $this->sendMessage($name . ' 未注册经济账户，查询失败!', $fromQQ, $fromGroup);
@@ -117,7 +126,7 @@ class CQEconomyTools extends CQKPlugin
         $this->sendMessage("转账成功! " . $EconomyAPI->getMonetaryUnit() . $args[1] . ' 已转入 ' . $args[0] . ' 的账户中。', $fromQQ, $fromGroup);
         if($qq = $CQBind->getQQByName($args[0]))
         {
-            $this->getKernel()->sendPrivateMessage($qq, "$name(QQ: $fromQQ) 向你的游戏账户中转入了 " . $EconomyAPI->getMonetaryUnit() . $args[1] . '!');
+            CQHandler::sendPrivateMessage($qq, "$name(QQ: $fromQQ) 向你的游戏账户中转入了 " . $EconomyAPI->getMonetaryUnit() . $args[1] . '!');
         }
     }
 }
