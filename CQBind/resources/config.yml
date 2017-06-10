@@ -14,3 +14,9 @@ unbind-command: 解绑账号
 
 # 随机码获取指令 (游戏中发送)
 random-code-command: 随机码
+
+# 绑定账号自动修改群名片
+auto-set-card-name: true
+
+# 群名片修改格式 ({NAME} 表示玩家名称)
+card-name-format: "{NAME}"

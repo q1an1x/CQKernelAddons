@@ -6,12 +6,13 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\utils\Config;
+use Taylcd\CQKernel\CQHandler;
 use Taylcd\CQKernel\CQLib;
 use Taylcd\CQKernel\plugin\CQKPlugin;
 
 class CQBind extends CQKPlugin
 {
-    public $api = 2.3;
+    public $api = 3.1;
 
     private $codes = [];
 
@@ -97,6 +98,10 @@ class CQBind extends CQKPlugin
             $config->set('account', $fromQQ);
             $config->save();
             unset($this->codes[$name]);
+            if($this->getConfig()->get('auto-set-card-name', true))
+            {
+                CQHandler::setGroupCard($fromGroup, $fromQQ, str_replace('{NAME}', $args[0], $this->getConfig()->get('card-name-format', '{NAME}')));
+            }
             $this->getCQLogger()->info($fromQQ . ' 已绑定游戏账号: ' . $name);
             $this->sendMessage('绑定游戏账号 ' . $name . ' 成功!', $fromQQ, $fromGroup);
 
@@ -122,10 +127,10 @@ class CQBind extends CQKPlugin
     {
         if($fromGroup === null)
         {
-            $this->getKernel()->sendPrivateMessage($fromQQ, $message);
+            CQHandler::sendPrivateMessage($fromQQ, $message);
             return;
         }
-        $this->getKernel()->sendGroupMessage($fromGroup, CQLib::At($fromQQ) . $message);
+        CQHandler::sendGroupMessage($fromGroup, CQLib::At($fromQQ) . $message);
     }
 
     public function commandFromGroup($command, array $args, $fromQQ, $fromGroup)
