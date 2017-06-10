@@ -2,12 +2,13 @@
 
 namespace Taylcd;
 
+use Taylcd\CQKernel\CQHandler;
 use Taylcd\CQKernel\CQLib;
 use Taylcd\CQKernel\plugin\CQKPlugin;
 
 class CQCommandExecutor extends CQKPlugin
 {
-    public $api = 2.3;
+    public $api = 3.1;
 
     private $alias = [];
 
@@ -25,7 +26,7 @@ class CQCommandExecutor extends CQKPlugin
         foreach($this->alias as $name => $info) $this->registerCommand($name);
     }
 
-    public function commandProgress($command, array $args, $fromQQ, $fromGroup = '')
+    public function commandProgress($command, array $args, $fromQQ, $fromGroup = '', $execute = false)
     {
         if(isset($this->alias[$command]))
         {
@@ -35,14 +36,17 @@ class CQCommandExecutor extends CQKPlugin
                 return;
             }
             array_unshift($args, $this->alias[$command]['command']);
-            $this->commandProgress($this->getConfig()->get('execute-command', '执行指令'), $args, $fromQQ, $fromGroup);
+            $this->commandProgress($this->getConfig()->get('execute-command', '执行指令'), $args, $fromQQ, $fromGroup, true);
             return;
         } else
         {
-            if(!$this->getKernel()->isCQAdmin($fromQQ))
+            if(!$execute)
             {
-                $this->sendMessage('您不是机器人的管理员, 无法执行指令!#{C}#' . $fromQQ . '#{C}#' . $fromGroup);
-                return;
+                if(!$this->getKernel()->isCQAdmin($fromQQ))
+                {
+                    $this->sendMessage('您不是机器人的管理员, 无法执行指令!#{C}#' . $fromQQ . '#{C}#' . $fromGroup);
+                    return;
+                }
             }
         }
         $commandLine = '';
@@ -58,14 +62,16 @@ class CQCommandExecutor extends CQKPlugin
         $data = explode('#{C}#', $message);
         $message = array_shift($data);
         if(!$message) return;
+        if($this->getConfig()->get('filter-escapes', true))
+            $message = preg_replace("/\xc2\xa7./", '', $message);
         $fromQQ = array_shift($data);
         $fromGroup = array_shift($data);
         if($fromGroup == '')
         {
-            $this->getKernel()->sendPrivateMessage($fromQQ, $message);
+            CQHandler::sendPrivateMessage($fromQQ, $message);
             return;
         }
-        $this->getKernel()->sendGroupMessage($fromGroup, CQLib::At($fromQQ) . CQLib::RETURN_KEY . $message);
+        CQHandler::sendGroupMessage($fromGroup, CQLib::At($fromQQ) . CQLib::RETURN_KEY . $message);
     }
 
     public function commandFromGroup($command, array $args, $fromQQ, $fromGroup)
