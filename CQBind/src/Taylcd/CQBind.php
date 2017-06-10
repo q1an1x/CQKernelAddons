@@ -98,11 +98,11 @@ class CQBind extends CQKPlugin
             $config->set('account', $fromQQ);
             $config->save();
             unset($this->codes[$name]);
-            if($this->getConfig()->get('auto-set-card-name', true))
+            if($this->getConfig()->get('auto-set-card-name', true) && $fromGroup !== null)
             {
                 CQHandler::setGroupCard($fromGroup, $fromQQ, str_replace('{NAME}', $args[0], $this->getConfig()->get('card-name-format', '{NAME}')));
             }
-            $this->getCQLogger()->info($fromQQ . ' 已绑定游戏账号: ' . $name);
+            // $this->getCQLogger()->info($fromQQ . ' 已绑定游戏账号: ' . $name);
             $this->sendMessage('绑定游戏账号 ' . $name . ' 成功!', $fromQQ, $fromGroup);
 
         } else
@@ -117,7 +117,7 @@ class CQBind extends CQKPlugin
             unset($config);
             @unlink($this->getDataFolder() . 'accounts/' . $fromQQ . '.dat');
             @unlink($this->getDataFolder() . 'players/' . $name . '.dat');
-            $this->getCQLogger()->info($fromQQ . ' 已解绑游戏账号: ' . $name);
+            // $this->getCQLogger()->info($fromQQ . ' 已解绑游戏账号: ' . $name);
             $this->sendMessage('解绑游戏账号 ' . $name . ' 成功!', $fromQQ, $fromGroup);
 
         }
