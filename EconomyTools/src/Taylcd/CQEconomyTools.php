@@ -75,7 +75,7 @@ class CQEconomyTools extends CQKPlugin
                 unset($CQBind);
             } else {
 
-                if(!$this->getConfig()->get('allow-check-others-economy', true))
+                if(!$this->getConfig()->get('allow-check-others-economy', true) and !$this->getKernel()->isCQAdmin($fromQQ))
                 {
                     $this->sendMessage("你不是管理员，无法查询他人的经济信息。\n" . '请进行账号绑定后进行经济查询!', $fromQQ, $fromGroup);
                     return;
